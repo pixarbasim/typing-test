@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div id="root">
+            <div id="typing-text-container"
+                class="noselect">
+                {{ textToType }}
+            </div>
+            <div id="user-input-container">
+                <textarea id="text-input" placeholder="Start typing above news here..."
+                    v-model="userInput"></textarea>
+            </div>
+            <div id="keyboard-container">
+                <div v-for="row in $options.keys" class="row">
+                    <button v-for="key in row" class="keyboard-key" id="{{key.id}}">
+                        {{key.key}}
+                    </button>
+                </div>
+            </div>
+            <div id="status-container">
+            </div>
+        </div>
+        <script src="scripts.js"></script>
+    </body>
+</html>
