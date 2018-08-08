@@ -59,19 +59,45 @@ const keys = {
     ]
 }
 
+Vue.component('keyboard-key', {
+  // The todo-item component now accepts a
+  // "prop", which is like a custom attribute.
+  // This prop is called todo.
+  props: ['key_value'],
+  template: '<button :key="key_value" :id="key_value" class="keyboard-key"> <div class="main-key">{{key_value}}</div> </button>'
+})
+
+
 var root = new Vue({
   el: '#root',
   data: {
     textToType: 'The prosecutor said if the mathematical mistakes are set right, the quantum of disproportionate assets owned by Jayalalithaa would be in excess of 76% of her known sources of income and not 8.12 % as arrived by the court.',
     userInput : '',
+    correctChars : 0,
+    mistakes : 0,
+    accuracy : 0,
+    pressed : false
   },
+  computed: {
+    keyId: function (key) {
+      return 'key-'+key.key
+    }
+},
   keys : keys,
   watch : {
       userInput : 'onUserInputChange'
   },
+
   methods : {
       onUserInputChange : function () {
-          console.log(this.userInput)
+          // console.log(this.userInput)
+      },
+      onKeyUp : function(e) {
+          const key = e.key.toUpperCase();
+          console.log(e);
+      },
+      onClick : function(key, e) {
+          console.log(key, e);
       }
   }
 })

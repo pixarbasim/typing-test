@@ -13,13 +13,17 @@
             </div>
             <div id="user-input-container">
                 <textarea id="text-input" placeholder="Start typing above news here..."
-                    v-model="userInput"></textarea>
+                    v-model="userInput" v-on:keyup="onKeyUp($event)"></textarea>
             </div>
             <div id="keyboard-container">
                 <div v-for="row in $options.keys" class="row">
-                    <button v-for="key in row" class="keyboard-key" id="{{key.id}}">
-                        {{key.key}}
-                    </button>
+
+                    <keyboard-key
+                      v-for="key in row"
+                      :id="'key'+key.key"
+                      :key_value="key.key">
+
+                    </keyboard-key>
                 </div>
             </div>
             <div id="status-container">
