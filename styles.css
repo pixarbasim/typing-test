@@ -63,6 +63,12 @@ button:focus{
     font-size: 20px;
     color: #424242;
     -webkit-font-smoothing: antialiased;
+    transition: all 200ms;
+}
+
+.keyboard-key.pressed {
+    transform: scale(1.2);
+    background-color: #d5f9ef;
 }
 
 #keyboard-container{

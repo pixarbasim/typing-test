@@ -21,7 +21,8 @@
                     <keyboard-key
                       v-for="key in row"
                       :id="'key'+key.key"
-                      :key_value="key.key">
+                      :key_value="key.key"
+                      :keyboard-class="keyClass(key)">
 
                     </keyboard-key>
                 </div>
