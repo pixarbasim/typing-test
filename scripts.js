@@ -1,3 +1,28 @@
+
+function getRandomFeed(feedItems) {
+	const min = 0, max = feedItems.length-1
+	const randomFeedIndex = Math.round(Math.random() * (max - min) + min);
+
+    return feedItems[randomFeedIndex]
+}
+
+$(document).ready(function() {
+
+	var feed = 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms';
+
+	$.ajax({
+	  type: 'GET',
+	  url: "https://api.rss2json.com/v1/api.json?rss_url=" + feed,
+	  dataType: 'jsonp',
+	  success: function(data) {
+
+		const textToType = getRandomFeed(data.items).description;
+		root.textToType = textToType
+	  }
+	});
+});
+
+
 const keys = {
 	row0: [
 		{ key: '`', 'shift-key': '~' },
@@ -69,12 +94,11 @@ var root = new Vue({
 	el: '#root',
 	data: {
 		textToType:
-			'The prosecutor said if the mathematical mistakes are set right, the quantum of disproportionate assets owned by Jayalalithaa would be in excess of 76% of her known sources of income and not 8.12 % as arrived by the court.',
+			'Loading text to type...',
 		userInput: '',
-		correctChars: 0,
-		mistakes: 0,
-		accuracy: 0,
-		lastPressedKey: null
+		currentWordIndex : 0,
+		lastPressedKey: null,
+		timer : null
 	},
 	computed: {
 		keyId: function(key) {
@@ -82,7 +106,12 @@ var root = new Vue({
 		}
 	},
 	keys: keys,
-	timer: null,
+	result : {
+		totalWords : 0,
+		correct : 0,
+		wrong : 0,
+		totalStrokes : 0
+	},
 	watch: {
 		userInput: 'onUserInputChange',
 		lastPressedKey: 'setLastPressedKeyNull'
@@ -91,13 +120,31 @@ var root = new Vue({
 		onUserInputChange: function() {
 			// console.log(this.userInput)
 		},
+		getCurrentWord : function() {
+			let words = this.textToType.split(' ');
+			return words[currentWordIndex];
+		},
 		onKeyUp: function(e) {
 			const key = e.key.toUpperCase()
 			this.lastPressedKey = key
-			console.log(key)
-		},
-		onClick: function(key, e) {
-			console.log(key, e)
+
+			if(this.$options.result.totalStrokes){
+				//start timer
+
+			}
+			if(key === ' '){
+				const currentWord = this.textToType.split(' ')[this.currentWordIndex]
+				const userWord = this.userInput.split(' ')[this.currentWordIndex]
+				if(!!currentWord && currentWord == userWord){
+					this.$options.result.correct++;
+				} else {
+					this.$options.result.wrong++;
+				}
+				this.$options.result.totalWords++;
+				this.currentWordIndex++;
+				console.log(this.$options.result)
+			}
+			this.$options.result.totalStrokes++;
 		},
 		keyClass: function(key) {
 			let classNames = 'keyboard-key'
