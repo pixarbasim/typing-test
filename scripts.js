@@ -8,7 +8,8 @@ function getRandomFeed(feedItems) {
 
 $(document).ready(function() {
 
-	var feed = 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms';
+	// var feed = 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms';
+	var feed = 'http://feeds.feedburner.com/ndtvnews-top-stories';
 
 	$.ajax({
 	  type: 'GET',
@@ -17,7 +18,7 @@ $(document).ready(function() {
 	  success: function(data) {
 
 		const textToType = getRandomFeed(data.items).description;
-		root.textToType = textToType
+		root.textToType = textToType.split(' ')
 	  }
 	});
 });
@@ -93,8 +94,7 @@ Vue.component('keyboard-key', {
 var root = new Vue({
 	el: '#root',
 	data: {
-		textToType:
-			'Loading text to type...',
+		textToType: ['Loading text to type...'],
 		userInput: '',
 		currentWordIndex : 0,
 		lastPressedKey: null,
@@ -133,7 +133,7 @@ var root = new Vue({
 
 			}
 			if(key === ' '){
-				const currentWord = this.textToType.split(' ')[this.currentWordIndex]
+				const currentWord = this.textToType[this.currentWordIndex]
 				const userWord = this.userInput.split(' ')[this.currentWordIndex]
 				if(!!currentWord && currentWord == userWord){
 					this.$options.result.correct++;
@@ -160,6 +160,9 @@ var root = new Vue({
 			this.timer = setTimeout(() => {
 				this.lastPressedKey = null
 			}, 400)
+		},
+		isWordTyped: function(index) {
+			return this.currentWordIndex > index
 		}
 	}
 })
