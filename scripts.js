@@ -98,7 +98,14 @@ var root = new Vue({
 		userInput: '',
 		currentWordIndex : 0,
 		lastPressedKey: null,
-		timer : null
+		timer : null,
+		status : {
+			totalWords : 0,
+			correct : 0,
+			wrong : 0,
+			totalStrokes : 0,
+			completed : false
+		}
 	},
 	computed: {
 		keyId: function(key) {
@@ -106,45 +113,42 @@ var root = new Vue({
 		}
 	},
 	keys: keys,
-	result : {
-		totalWords : 0,
-		correct : 0,
-		wrong : 0,
-		totalStrokes : 0
-	},
 	watch: {
-		userInput: 'onUserInputChange',
 		lastPressedKey: 'setLastPressedKeyNull'
 	},
 	methods: {
-		onUserInputChange: function() {
-			// console.log(this.userInput)
-		},
-		getCurrentWord : function() {
-			let words = this.textToType.split(' ');
-			return words[currentWordIndex];
-		},
 		onKeyUp: function(e) {
 			const key = e.key.toUpperCase()
 			this.lastPressedKey = key
 
-			if(this.$options.result.totalStrokes){
+			if(this.status.totalStrokes){
 				//start timer
 
 			}
 			if(key === ' '){
 				const currentWord = this.textToType[this.currentWordIndex]
-				const userWord = this.userInput.split(' ')[this.currentWordIndex]
-				if(!!currentWord && currentWord == userWord){
-					this.$options.result.correct++;
+
+				const userWords = this.userInput.split(' ')
+				const lastTypedWord = userWords[userWords.length - 2]
+
+				if(!!currentWord && currentWord == lastTypedWord){
+					this.status.correct++;
 				} else {
-					this.$options.result.wrong++;
+					this.status.wrong++;
 				}
-				this.$options.result.totalWords++;
-				this.currentWordIndex++;
-				console.log(this.$options.result)
+
+				this.status.totalWords++;
+
+				console.log(this.status)
+
+				if(this.currentWordIndex == this.textToType.length - 1){
+					this.status.completed = true
+					console.log('done')
+				} else {
+					this.currentWordIndex++;
+				}
 			}
-			this.$options.result.totalStrokes++;
+			this.status.totalStrokes++;
 		},
 		keyClass: function(key) {
 			let classNames = 'keyboard-key'

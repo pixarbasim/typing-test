@@ -27,6 +27,12 @@
                 </div>
             </div>
             <div id="status-container">
+                <div class="right-section">
+                    <span id="total-words" class="status-info"><span class="status-label">Total words:</span> {{status.totalWords}}</span>•
+                    <span id="correct-words" class="status-info"><span class="status-label">Correct:</span> {{status.correct}}</span>•
+                    <span id="wrong-words" class="status-info"><span class="status-label">Wrong:</span> {{status.wrong}}</span>•
+                    <span id="total-key-strokes" class="status-info"><span class="status-label">Total keystrokes:</span> {{status.totalStrokes}}</span>
+                </div>
             </div>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
