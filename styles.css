@@ -1,6 +1,7 @@
 body {
     color: white;
-    background: linear-gradient(to top, rgb(255, 234, 174), rgb(255, 139, 82));
+    background: -webkit-linear-gradient(to top, #F29492, #114357);
+    background: linear-gradient(to top, #F29492, #114357);
     font-family: 'Open sans', Arial, sans-serif;
 }
 #root {
