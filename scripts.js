@@ -1,27 +1,11 @@
 
-function getRandomFeed(feedItems) {
-	const min = 0, max = feedItems.length-1
-	const randomFeedIndex = Math.round(Math.random() * (max - min) + min);
 
-    return feedItems[randomFeedIndex]
-}
-
-$(document).ready(function() {
+// $(document).ready(function() {
 
 	// var feed = 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms';
-	var feed = 'http://feeds.feedburner.com/ndtvnews-top-stories';
+	// var feed = 'http://feeds.feedburner.com/ndtvnews-top-stories';
 
-	$.ajax({
-	  type: 'GET',
-	  url: "https://api.rss2json.com/v1/api.json?rss_url=" + feed,
-	  dataType: 'jsonp',
-	  success: function(data) {
-
-		const textToType = getRandomFeed(data.items).description;
-		root.textToType = textToType.split(' ')
-	  }
-	});
-});
+// });
 
 
 const keys = {
@@ -113,18 +97,50 @@ var root = new Vue({
 		}
 	},
 	keys: keys,
+	feedItems : [],
 	watch: {
 		lastPressedKey: 'setLastPressedKeyNull'
 	},
+	created : function() {
+		var feed = 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms';
+		// var feed = 'http://feeds.feedburner.com/ndtvnews-top-stories';
+		// var feed = 'https://www.google.com/alerts/feeds/15237980710583600646/8321364587663983768';
+		var self = this
+		$.ajax({
+		  type: 'GET',
+		  url: "https://api.rss2json.com/v1/api.json?rss_url=" + feed+"&api_key=4p7ujzvrptgru6c6var3d4cmbnwgtricaxjop0rs",
+		  dataType: 'jsonp',
+		  success: function(data) {
+
+			// const textToType = getRandomFeed(data.items).description;
+			self.feedItems = data.items.map(item => item.description)
+			self.textToType = self.getRandomFeed()
+		  }
+		});
+
+	},
 	methods: {
+		getRandomFeed: function () {
+			if(this.feedItems.length == 0){
+				this.status.completed = true
+				return 'Done for the today\'s news!'.split(' ')
+			}
+
+			const min = 0, max = this.feedItems.length-1
+			const randomFeedIndex = Math.round(Math.random() * (max - min) + min);
+
+			const item = this.feedItems.splice(randomFeedIndex, 1)[0]
+		    return item.split(' ')
+		},
 		onKeyUp: function(e) {
 			const key = e.key.toUpperCase()
 			this.lastPressedKey = key
 
-			if(this.status.totalStrokes){
+			if(this.status.totalStrokes == 0){
 				//start timer
-
+				// const textToType = getRandomFeed(data.items).description;
 			}
+
 			if(key === ' '){
 				const currentWord = this.textToType[this.currentWordIndex]
 
@@ -142,11 +158,14 @@ var root = new Vue({
 				console.log(this.status)
 
 				if(this.currentWordIndex == this.textToType.length - 1){
-					this.status.completed = true
-					console.log('done')
+
+					this.textToType = this.getRandomFeed();
+					this.currentWordIndex = 0;
+					this.userInput = 0;
 				} else {
 					this.currentWordIndex++;
 				}
+
 			}
 			this.status.totalStrokes++;
 		},
