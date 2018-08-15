@@ -102,7 +102,44 @@ button:focus{
     margin-right: 10px;
 }
 
+.left-section {
+    float: left;
+    margin-left: 10px;
+}
+
+.timer-btn{
+    color: #424242;
+    padding: 4px 15px;
+    line-height: 40px;
+    background: #c4d5dc;
+    border-radius: 15px;
+    margin-right: 8px;
+    cursor: pointer;
+    -webkit-font-smoothing: antialiased;
+    transition: 200ms all ease-in-out;
+}
+.timer-btn:hover{
+    background: #424242;
+    color: white
+}
+
+#time-elapsed{
+    padding: 5px;
+    line-height: 40px;
+    color: #6d6d6d;
+    font-weight: 600;
+    -webkit-font-smoothing: antialiased;
+}
+.time-elapsed-label{
+    color: #424242;
+}
+
 .status-info{
     padding: 5px 10px;
     line-height: 40px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.seperator {
+    margin: 0px 10px;
 }

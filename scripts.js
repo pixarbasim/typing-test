@@ -69,6 +69,7 @@ const keys = {
 	]
 }
 
+
 Vue.component('keyboard-key', {
 	props: ['key_value', 'keyboardClass'],
 	template:
@@ -82,7 +83,8 @@ var root = new Vue({
 		userInput: '',
 		currentWordIndex : 0,
 		lastPressedKey: null,
-		timer : null,
+		running: false,
+		timeElapsed : '00:00:00',
 		status : {
 			totalWords : 0,
 			correct : 0,
@@ -103,6 +105,7 @@ var root = new Vue({
 	},
 	created : function() {
 		var feed = 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms';
+		// var feed = 'https://timesofindia.indiatimes.com/rssfeeds/1221656.cms';
 		// var feed = 'http://feeds.feedburner.com/ndtvnews-top-stories';
 		// var feed = 'https://www.google.com/alerts/feeds/15237980710583600646/8321364587663983768';
 		var self = this
@@ -186,6 +189,24 @@ var root = new Vue({
 		},
 		isWordTyped: function(index) {
 			return this.currentWordIndex > index
+		},
+		startTest: function(){
+			if(!this.running){
+				console.log('started')
+				this.running = true
+			}
+		},
+		stopTest: function(){
+			if(this.running){
+				console.log('stopped')
+				this.running = false
+			}
+		},
+		pauseTest: function(){
+			if(this.running){
+				console.log('paused')
+				this.running = false
+			}
 		}
 	}
 })

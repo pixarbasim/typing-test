@@ -12,7 +12,7 @@
             </div>
             <div id="user-input-container">
                 <textarea id="text-input" placeholder="Start typing above news here..."
-                    v-model="userInput" v-on:keyup="onKeyUp($event)"></textarea>
+                    v-model="userInput" v-on:keyup="onKeyUp($event)" autofocus></textarea>
             </div>
             <div id="keyboard-container">
                 <div v-for="row in $options.keys" class="row">
@@ -27,6 +27,12 @@
                 </div>
             </div>
             <div id="status-container">
+                <div class="left-section">
+                    <span id="btn-start" class="timer-btn" v-on:click="startTest">Start</span>
+                    <span id="btn-stop" class="timer-btn" v-on:click="stopTest">Stop</span>
+                    <span id="btn-pause" class="timer-btn" v-on:click="pauseTest">Pause</span>
+                    <span id="time-elapsed"><span class="time-elapsed-label">Time Elapsed: </span>{{timeElapsed}}</span>
+                </div>
                 <div class="right-section">
                     <span id="total-words" class="status-info"><span class="status-label">Total words:</span> {{status.totalWords}}</span>•
                     <span id="correct-words" class="status-info"><span class="status-label">Correct:</span> {{status.correct}}</span>•
