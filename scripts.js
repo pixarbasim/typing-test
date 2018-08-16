@@ -147,8 +147,17 @@ var root = new Vue({
 				//Reset data
 				this.currentWordIndex = 0;
 				this.userInput = '';
-				this.status.totalStrokes = 0;
 				this.textToType = this.getRandomFeed();
+
+				this.status = {
+					totalWords : 0,
+					correct : 0,
+					wrong : 0,
+					totalStrokes : 0,
+					wordsPerMin : 0,
+					completed : false
+				}
+				
 				this.showCompleteModal = false
 		},
 		getRandomFeed: function () {
