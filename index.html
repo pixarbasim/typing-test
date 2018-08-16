@@ -40,7 +40,7 @@
                     <span class="status-info"><span class="status-label">Total keystrokes:</span> {{status.totalStrokes}}</span>
                 </div>
             </div>
-            <modal v-if="showCompleteModal" @close="showCompleteModal = false">
+            <modal v-if="showCompleteModal" @close="closeCompleteModal">
               <h3 slot="header">Results</h3>
               <div class="result-body" slot="body">
                   <div id="total-words" class="res-field"><span class="res-label">Total words:</span> {{status.totalWords}}</div>
@@ -48,7 +48,7 @@
                   <div id="wrong-words" class="res-field"><span class="res-label">Wrong words:</span> {{status.wrong}}</div>
                   <div id="total-key-strokes" class="res-field"><span class="res-label">Total keystrokes:</span> {{status.totalStrokes}}</div>
                   <div id="words-per-min" class="res-field"><span class="res-label">Words per minute:</span> {{status.wordsPerMin}}</div>
-                  <div id="accuracy" class="res-field"><span class="res-label">Accuracy:</span>{{accuracy}}%</div>
+                  <div id="accuracy" class="res-field"><span class="res-label">Accuracy:</span> {{accuracy}}%</div>
               </div>
             </modal>
         </div>

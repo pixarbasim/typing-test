@@ -109,13 +109,14 @@ var root = new Vue({
 			return 'key-' + key.key
 		},
 		accuracy : function() {
-			return this.status.correct/this.status.totalWords * 100;
+			return Math.round((this.status.correct/this.status.totalWords * 100) * 100) / 100;
 		}
 	},
 	keys: keys,
 	feedItems : [],
 	watch: {
-		lastPressedKey: 'setLastPressedKeyNull'
+		lastPressedKey: 'setLastPressedKeyNull',
+		// showCompleteModal : 'onShowCompleteModalChange'
 	},
 	created : function() {
 		var feed = 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms';
@@ -140,6 +141,16 @@ var root = new Vue({
 
 	},
 	methods: {
+		closeCompleteModal: function(){
+
+				this.timeElapsed = '00:00:00'
+				//Reset data
+				this.currentWordIndex = 0;
+				this.userInput = '';
+				this.status.totalStrokes = 0;
+				this.textToType = this.getRandomFeed();
+				this.showCompleteModal = false
+		},
 		getRandomFeed: function () {
 			if(this.feedItems.length == 0){
 				this.status.completed = true
@@ -218,15 +229,10 @@ var root = new Vue({
 				this.running = false
 				clearInterval(this.timer.clockInterval)
 				this.timer.totalTimeInSec = 0
-				this.timeElapsed = '00:00:00'
 				this.status.completed = true
 				this.showCompleteModal = true
 
-				//Reset data
-				this.currentWordIndex = 0;
-				this.userInput = '';
-				this.status.totalStrokes = 0;
-				this.textToType = this.getRandomFeed();
+
 			}
 		},
 		pauseTest: function(){
