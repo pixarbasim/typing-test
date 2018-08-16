@@ -76,6 +76,10 @@ Vue.component('keyboard-key', {
 		'<button :key="key_value" :id="key_value" :class="keyboardClass"> <div class="main-key">{{key_value}}</div> </button>'
 })
 
+Vue.component('modal', {
+  template: '#modal-template'
+})
+
 var root = new Vue({
 	el: '#root',
 	data: {
@@ -90,12 +94,22 @@ var root = new Vue({
 			correct : 0,
 			wrong : 0,
 			totalStrokes : 0,
+			wordsPerMin : 0,
 			completed : false
-		}
+		},
+		keyTimer : null,
+		timer : {
+			clockInterval : null,
+			totalTimeInSec : 0
+		},
+		showCompleteModal: false
 	},
 	computed: {
 		keyId: function(key) {
 			return 'key-' + key.key
+		},
+		accuracy : function() {
+			return this.status.correct/this.status.totalWords * 100;
 		}
 	},
 	keys: keys,
@@ -111,12 +125,15 @@ var root = new Vue({
 		var self = this
 		$.ajax({
 		  type: 'GET',
-		  url: "https://api.rss2json.com/v1/api.json?rss_url=" + feed+"&api_key=4p7ujzvrptgru6c6var3d4cmbnwgtricaxjop0rs",
+		  url: "https://api.rss2json.com/v1/api.json?rss_url=" + feed+ "&api_key=4p7ujzvrptgru6c6var3d4cmbnwgtricaxjop0rs",
 		  dataType: 'jsonp',
 		  success: function(data) {
 
 			// const textToType = getRandomFeed(data.items).description;
-			self.feedItems = data.items.map(item => item.description)
+			const dataItems = data.items
+			// if(dataItems.length <0)
+			// console.log()
+			self.feedItems = dataItems.filter(item => !!item.description).map(item => item.description)
 			self.textToType = self.getRandomFeed()
 		  }
 		});
@@ -141,6 +158,7 @@ var root = new Vue({
 
 			if(this.status.totalStrokes == 0){
 				//start timer
+				this.startTest()
 				// const textToType = getRandomFeed(data.items).description;
 			}
 
@@ -157,8 +175,7 @@ var root = new Vue({
 				}
 
 				this.status.totalWords++;
-
-				console.log(this.status)
+				this.status.wordsPerMin = Math.floor(this.status.totalWords / (this.timer.totalTimeInSec / 60))
 
 				if(this.currentWordIndex == this.textToType.length - 1){
 
@@ -180,10 +197,10 @@ var root = new Vue({
 			return classNames
 		},
 		setLastPressedKeyNull: function() {
-			if (this.timer) {
-				clearTimeout(this.timer)
+			if (this.keyTimer) {
+				clearTimeout(this.keyTimer)
 			}
-			this.timer = setTimeout(() => {
+			this.keyTimer = setTimeout(() => {
 				this.lastPressedKey = null
 			}, 400)
 		},
@@ -192,21 +209,44 @@ var root = new Vue({
 		},
 		startTest: function(){
 			if(!this.running){
-				console.log('started')
 				this.running = true
+				this.timer.clockInterval = setInterval(this.tick, 1000);
 			}
 		},
 		stopTest: function(){
 			if(this.running){
-				console.log('stopped')
 				this.running = false
+				clearInterval(this.timer.clockInterval)
+				this.timer.totalTimeInSec = 0
+				this.timeElapsed = '00:00:00'
+				this.status.completed = true
+				this.showCompleteModal = true
+
+				//Reset data
+				this.currentWordIndex = 0;
+				this.userInput = '';
+				this.status.totalStrokes = 0;
+				this.textToType = this.getRandomFeed();
 			}
 		},
 		pauseTest: function(){
 			if(this.running){
-				console.log('paused')
 				this.running = false
+				clearInterval(this.timer.clockInterval)
 			}
+		},
+		tick: function () {
+
+		    this.timer.totalTimeInSec++;
+
+			var sec_num = parseInt(this.timer.totalTimeInSec, 10);
+		    var hours   = Math.floor(sec_num / 3600);
+		    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+		    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+		    this.timeElapsed = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":"
+				+ (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":"
+				+ (seconds > 9 ? seconds : "0" + seconds);
 		}
 	}
 })

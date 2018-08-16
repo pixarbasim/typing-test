@@ -11,7 +11,7 @@
                 <span v-for="(word, index) in textToType" v-bind:class="{ word, isTyped: isWordTyped(index) }"/>{{word}}</span>
             </div>
             <div id="user-input-container">
-                <textarea id="text-input" placeholder="Start typing above news here..."
+                <textarea id="text-input" placeholder="Start typing above news here..." onpaste="return false;"
                     v-model="userInput" v-on:keyup="onKeyUp($event)" autofocus></textarea>
             </div>
             <div id="keyboard-container">
@@ -26,22 +26,63 @@
                     </keyboard-key>
                 </div>
             </div>
-            <div id="status-container">
+            <div id="status-container" class="noselect">
                 <div class="left-section">
-                    <span id="btn-start" class="timer-btn" v-on:click="startTest">Start</span>
-                    <span id="btn-stop" class="timer-btn" v-on:click="stopTest">Stop</span>
-                    <span id="btn-pause" class="timer-btn" v-on:click="pauseTest">Pause</span>
-                    <span id="time-elapsed"><span class="time-elapsed-label">Time Elapsed: </span>{{timeElapsed}}</span>
+                    <span id="btn-start" class="timer-btn" v-on:click="startTest" v-if="!running">Start</span>
+                    <span id="btn-stop" class="timer-btn" v-on:click="stopTest" v-if="running">Stop</span>
+                    <span id="btn-pause" class="timer-btn" v-on:click="pauseTest" v-if="running">Pause</span>
+                    <span id="time-elapsed"><span class="time-elapsed-label">Time Elapsed: </span><time>{{timeElapsed}}</time></span>
                 </div>
                 <div class="right-section">
-                    <span id="total-words" class="status-info"><span class="status-label">Total words:</span> {{status.totalWords}}</span>•
-                    <span id="correct-words" class="status-info"><span class="status-label">Correct:</span> {{status.correct}}</span>•
-                    <span id="wrong-words" class="status-info"><span class="status-label">Wrong:</span> {{status.wrong}}</span>•
-                    <span id="total-key-strokes" class="status-info"><span class="status-label">Total keystrokes:</span> {{status.totalStrokes}}</span>
+                    <span class="status-info"><span class="status-label">Total words:</span> {{status.totalWords}}</span>•
+                    <span class="status-info"><span class="status-label">Correct:</span> {{status.correct}}</span>•
+                    <span class="status-info"><span class="status-label">Wrong:</span> {{status.wrong}}</span>•
+                    <span class="status-info"><span class="status-label">Total keystrokes:</span> {{status.totalStrokes}}</span>
                 </div>
             </div>
+            <modal v-if="showCompleteModal" @close="showCompleteModal = false">
+              <h3 slot="header">Results</h3>
+              <div class="result-body" slot="body">
+                  <div id="total-words" class="res-field"><span class="res-label">Total words:</span> {{status.totalWords}}</div>
+                  <div id="correct-words" class="res-field"><span class="res-label">Correct words:</span> {{status.correct}}</div>
+                  <div id="wrong-words" class="res-field"><span class="res-label">Wrong words:</span> {{status.wrong}}</div>
+                  <div id="total-key-strokes" class="res-field"><span class="res-label">Total keystrokes:</span> {{status.totalStrokes}}</div>
+                  <div id="words-per-min" class="res-field"><span class="res-label">Words per minute:</span> {{status.wordsPerMin}}</div>
+                  <div id="accuracy" class="res-field"><span class="res-label">Accuracy:</span>{{accuracy}}%</div>
+              </div>
+            </modal>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="scripts.js"></script>
+
+        <script type="text/x-template" id="modal-template">
+          <transition name="modal">
+            <div class="modal-mask">
+              <div class="modal-wrapper">
+                <div class="modal-container">
+
+                  <div class="modal-header">
+                    <slot name="header">
+                    </slot>
+                  </div>
+
+                  <div class="modal-body">
+                    <slot name="body">
+                    </slot>
+                  </div>
+
+                  <div class="modal-footer">
+                    <slot name="footer">
+                        foot
+                      <button class="modal-default-button" @click="$emit('close')">
+                        CLOSE
+                      </button>
+                    </slot>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </script>
     </body>
 </html>
